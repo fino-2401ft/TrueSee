@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: TrueSeeBE
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          # Throwaway CI-only placeholders; no repository secrets are used.
+          POSTGRES_USER: truesee
+          POSTGRES_PASSWORD: truesee_ci_password
+          POSTGRES_DB: truesee_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U truesee -d truesee_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://truesee:truesee_ci_password@localhost:5432/truesee_test
+      TEST_DATABASE_URL: postgresql://truesee:truesee_ci_password@localhost:5432/truesee_test
+      LOG_FORMAT: json
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: TrueSeeBE/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+      - name: Apply migrations (first run applies the baseline)
+        run: npm run prisma:migrate
+      - name: Apply migrations again (must be a no-op)
+        run: npm run prisma:migrate
+      - run: npm run prisma:status
+      - run: npm test
+      - run: npm run test:integration
+
+  mobile:
+    name: mobile
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: TrueSeeFE
+    env:
+      # Public placeholder values; EXPO_PUBLIC_* never hold secrets.
+      EXPO_PUBLIC_API_BASE_URL: http://10.0.2.2:3000/api/v1
+      EXPO_PUBLIC_APP_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: TrueSeeFE/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm test
