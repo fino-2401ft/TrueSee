@@ -1,0 +1,101 @@
+openapi: 3.1.0
+info:
+  title: TrueSee API — Roadmap Phase 1
+  version: 0.1.0
+  description: >
+    Phase 1 exposes exactly one endpoint: an unauthenticated liveness check
+    (Constitution v1.0.1, Principle V). All other paths return the standard error
+    envelope with code NOT_FOUND.
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      summary: Liveness and database reachability
+      description: >
+        Public. Performs no writes. Responds within 2 seconds; if the database check
+        does not finish within HEALTH_DB_TIMEOUT_MS the database is reported as down.
+        Returns no user data, secrets, connection details, or version information.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/RequestIdHeader'
+      responses:
+        '200':
+          description: Service and database are healthy.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+              example:
+                status: ok
+                database: up
+        '503':
+          description: Service is running but the database is unavailable.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+              example:
+                status: degraded
+                database: down
+components:
+  parameters:
+    RequestIdHeader:
+      name: X-Request-Id
+      in: header
+      required: false
+      description: Optional client-supplied UUID. Ignored and replaced if not a valid UUID.
+      schema:
+        type: string
+        format: uuid
+  headers:
+    XRequestId:
+      description: Request ID used in all log entries for this request.
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    HealthStatus:
+      type: object
+      additionalProperties: false
+      required: [status, database]
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded]
+        database:
+          type: string
+          enum: [up, down]
+    ErrorEnvelope:
+      description: Returned for every error response except the health endpoint's 503.
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: object
+          additionalProperties: false
+          required: [code, message, requestId]
+          properties:
+            code:
+              type: string
+              enum: [NOT_FOUND, INTERNAL_ERROR]
+              description: Stable machine-readable code; clients branch on this only.
+            message:
+              type: string
+            requestId:
+              type: string
+              format: uuid
+      example:
+        error:
+          code: NOT_FOUND
+          message: Route not found
+          requestId: 0b6f3c1e-8a4d-4f7e-9c2a-1d5e6f7a8b9c
