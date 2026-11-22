@@ -1,0 +1,12 @@
+// Roadmap Phase 1: no models. Domain tables are added in their own Roadmap Phases
+// (the first one, User, in Phase 2).
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+}

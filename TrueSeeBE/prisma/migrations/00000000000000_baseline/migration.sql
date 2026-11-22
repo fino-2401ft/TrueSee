@@ -1,0 +1,3 @@
+-- Baseline migration for Roadmap Phase 1 (Local Foundation).
+-- Intentionally creates no tables: it establishes the migration history so that later
+-- Roadmap Phases add their domain tables (starting with User in Phase 2) as new migrations.
