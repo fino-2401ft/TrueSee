@@ -135,7 +135,7 @@ three backend connection states with Retry, and nothing else.
 - [X] T049 [US2] Implement `TrueSeeFE/src/application/checkBackendStatus.ts` combining the client and domain mapping with single-flight protection — makes T043 pass
 - [X] T050 [US2] Implement `TrueSeeFE/src/presentation/AppShellScreen.tsx` per contracts/mobile-app-shell.md (texts, test IDs, Retry behaviour, `misconfigured` state) using local React state only (no Zustand, FR-015) — makes T044 pass
 - [X] T051 [US2] Update `TrueSeeFE/App.tsx` to render only `AppShellScreen` (no router, no other screens) and keep `TrueSeeFE/index.ts` as the entry (FR-013, FR-023)
-- [ ] T052 [US2] Build and run on an Android 8.0+ emulator or device with `npx expo run:android`; run quickstart.md V7 (three setups × 3 cold launches) and record results (SC-002)
+- [X] T052 [US2] Build and run on an Android 8.0+ emulator or device with `npx expo run:android`; run quickstart.md V7 (three setups × 3 cold launches) and record results (SC-002)
 
 **Checkpoint**: US2 complete — app shell verified on Android; all mobile tests pass.
 
@@ -148,10 +148,10 @@ secrets.
 
 **Independent Test**: quickstart.md V9 (one green run, three deliberate failures).
 
-- [ ] T053 [US3] Create `.github/workflows/ci.yml` triggered on `push` to `main` and `pull_request`; job `backend` (working dir `TrueSeeBE`): Node 22 with npm cache keyed on `TrueSeeBE/package-lock.json`, `npm ci`, `typecheck`, `lint`, `format:check`, `postgres:18-alpine` service with placeholder credentials and a `truesee_test` database, `prisma migrate deploy` twice + `prisma migrate status`, `test`, `test:integration`; env values are inline placeholders, no `secrets.*` used (FR-018, FR-019, research R15)
-- [ ] T054 [US3] Add job `mobile` to `.github/workflows/ci.yml` (working dir `TrueSeeFE`): Node 22 with npm cache keyed on `TrueSeeFE/package-lock.json`, `npm ci`, `typecheck`, `lint`, `format:check`, `test` with placeholder `EXPO_PUBLIC_*` env values (FR-018, FR-019)
-- [ ] T055 [US3] Make the first commit(s) on `main` using Conventional Commits and push to `origin` (`https://github.com/fino-2401ft/TrueSee`); confirm both CI jobs pass in ≤ 15 minutes (SC-003)
-- [ ] T056 [US3] Run the three negative checks from quickstart.md V9 (type error, lint error, failing test) on throwaway commits, confirm each fails the correct job, then revert them with normal (non-force) commits and record results (SC-003)
+- [X] T053 [US3] Create `.github/workflows/ci.yml` triggered on `push` to `main` and `pull_request`; job `backend` (working dir `TrueSeeBE`): Node 22 with npm cache keyed on `TrueSeeBE/package-lock.json`, `npm ci`, `typecheck`, `lint`, `format:check`, `postgres:18-alpine` service with placeholder credentials and a `truesee_test` database, `prisma migrate deploy` twice + `prisma migrate status`, `test`, `test:integration`; env values are inline placeholders, no `secrets.*` used (FR-018, FR-019, research R15)
+- [X] T054 [US3] Add job `mobile` to `.github/workflows/ci.yml` (working dir `TrueSeeFE`): Node 22 with npm cache keyed on `TrueSeeFE/package-lock.json`, `npm ci`, `typecheck`, `lint`, `format:check`, `test` with placeholder `EXPO_PUBLIC_*` env values (FR-018, FR-019)
+- [X] T055 [US3] Make the first commit(s) on `main` using Conventional Commits and push to `origin` (`https://github.com/fino-2401ft/TrueSee`); confirm both CI jobs pass in ≤ 15 minutes (SC-003)
+- [X] T056 [US3] Run the three negative checks from quickstart.md V9 (type error, lint error, failing test) on throwaway commits, confirm each fails the correct job, then revert them with normal (non-force) commits and record results (SC-003)
 
 **Checkpoint**: US3 complete — CI is the enforced quality gate.
 
@@ -163,9 +163,9 @@ secrets.
 
 **Independent Test**: A reviewer answers the 5 questions in SC-007 from the docs alone.
 
-- [ ] T057 [P] [US4] Write `README.md` (local-run guide): prerequisites with minimum versions incl. Android 8.0 (API 26), clone, copy the three `.env.example` files, `docker compose up -d`, migrate, start backend, run the app on emulator vs physical device (backend address per case), changing `POSTGRES_PORT` if 5432 is taken, and commands for typecheck/lint/format/tests in each project (FR-021)
-- [ ] T058 [P] [US4] Write `ARCHITECTURE.md`: repository layout (D1); mobile four layers and inward dependency rule; backend infrastructure modules now and the planned feature-module-per-Roadmap-Phase schedule (listed as planned only); data source-of-truth rules (PostgreSQL authoritative, device storage arrives in Phase 8); chosen state management (Zustand) and navigation (Expo Router) with "installed when first used"; logging and error-envelope conventions; liveness endpoint rule from Constitution V v1.0.1 (FR-022, Constitution III, X)
-- [ ] T059 [US4] Cross-check every `process.env` / config read in `TrueSeeBE/src/` and `TrueSeeFE/src/` against the three `.env.example` files and fix gaps (SC-005, US4-AS2)
+- [X] T057 [P] [US4] Write `README.md` (local-run guide): prerequisites with minimum versions incl. Android 8.0 (API 26), clone, copy the three `.env.example` files, `docker compose up -d`, migrate, start backend, run the app on emulator vs physical device (backend address per case), changing `POSTGRES_PORT` if 5432 is taken, and commands for typecheck/lint/format/tests in each project (FR-021)
+- [X] T058 [P] [US4] Write `ARCHITECTURE.md`: repository layout (D1); mobile four layers and inward dependency rule; backend infrastructure modules now and the planned feature-module-per-Roadmap-Phase schedule (listed as planned only); data source-of-truth rules (PostgreSQL authoritative, device storage arrives in Phase 8); chosen state management (Zustand) and navigation (Expo Router) with "installed when first used"; logging and error-envelope conventions; liveness endpoint rule from Constitution V v1.0.1 (FR-022, Constitution III, X)
+- [X] T059 [US4] Cross-check every `process.env` / config read in `TrueSeeBE/src/` and `TrueSeeFE/src/` against the three `.env.example` files and fix gaps (SC-005, US4-AS2)
 
 **Checkpoint**: US4 complete — documentation answers SC-007's questions.
 
@@ -175,11 +175,11 @@ secrets.
 
 **Purpose**: Phase-wide verification and the completion report.
 
-- [ ] T060 [P] Scope review against research.md "Explicitly not added": confirm no Phase 2–16 dependency, table, endpoint, module, screen, or route exists in `TrueSeeBE/` or `TrueSeeFE/` (FR-023, SC-006)
-- [ ] T061 [P] Secret review: `git ls-files` shows no `.env`; search tracked files and Git history for passwords/keys beyond documented local placeholders (SC-005)
-- [ ] T062 Confirm `prd.md`, `.specify/`, and `.cursor/` are unchanged from their pre-phase content (FR-001)
-- [ ] T063 Re-run the full quickstart.md (V1–V10) from a fresh clone of `https://github.com/fino-2401ft/TrueSee` and time the setup (SC-001)
-- [ ] T064 Write the Phase 1 completion report (files created/changed, how to run, tests and checks executed with results, Constitution Check re-verification, remaining risks such as unverified iOS build, conflicts found) and stop for owner confirmation (FR-024, Constitution XI)
+- [X] T060 [P] Scope review against research.md "Explicitly not added": confirm no Phase 2–16 dependency, table, endpoint, module, screen, or route exists in `TrueSeeBE/` or `TrueSeeFE/` (FR-023, SC-006)
+- [X] T061 [P] Secret review: `git ls-files` shows no `.env`; search tracked files and Git history for passwords/keys beyond documented local placeholders (SC-005)
+- [X] T062 Confirm `prd.md`, `.specify/`, and `.cursor/` are unchanged from their pre-phase content (FR-001)
+- [X] T063 Re-run the full quickstart.md (V1–V10) from a fresh clone of `https://github.com/fino-2401ft/TrueSee` and time the setup (SC-001)
+- [X] T064 Write the Phase 1 completion report (files created/changed, how to run, tests and checks executed with results, Constitution Check re-verification, remaining risks such as unverified iOS build, conflicts found) and stop for owner confirmation (FR-024, Constitution XI)
 
 ---
 
