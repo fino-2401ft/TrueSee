@@ -50,3 +50,7 @@ export class HealthService {
       : { status: 'degraded', database: 'down' };
   }
 }
+
+// CI negative check — intentional lint error
+const __ciLintErrorUnused = 42;
+
