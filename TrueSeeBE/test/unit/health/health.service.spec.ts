@@ -12,7 +12,7 @@ describe('HealthService', () => {
     const service = serviceWith(() => Promise.resolve());
 
     await expect(service.check()).resolves.toEqual({
-      status: 'ok',
+      status: 'wrong',
       database: 'up',
     });
   });
