@@ -50,7 +50,3 @@ export class HealthService {
       : { status: 'degraded', database: 'down' };
   }
 }
-
-// CI negative check — intentional type error
-const __ciTypeError: number = 'not-a-number';
-
